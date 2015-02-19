@@ -18,23 +18,24 @@ int main(int argc, char const *argv[])
 		heap.insert(std::rand());
 	}
 
-	int last = 0;
-	//std::clock_t start = std::clock();
-	std::ofstream file;
-	file.open("sorted.txt");
+	std::clock_t start = std::clock();
 
 	for (int i = 0; i < 500000; i++) {
-		int current = heap.deleteMin();
-		if (i % 10 == 0) {
-			file << current << "\n";
-		} else {
-			file << current << "\t";
-		}
+		heap.deleteMin();
 	}
 
-	file.close();
+	printf("Finished sort of 500,000 random elements in %.0fms\n", (std::clock() - start)/ (double) (CLOCKS_PER_SEC / 1000));
 
-	//printf("Finished in %.0fms\n", (std::clock() - start)/ (double) (CLOCKS_PER_SEC / 1000));
+	for (int i = 500000; i > 0; i--) {
+		heap.insert(i);
+	}
+
+	start = std::clock();
+	for (int i = 0; i < 500000; i++) {
+		heap.deleteMin();
+	}
+
+	printf("Finished sort of 500,000 backwards elements in %.0fms\n", (std::clock() - start)/ (double) (CLOCKS_PER_SEC / 1000));
 
 	return 0;
 }
