@@ -22,8 +22,11 @@ public:
 
 	// Returns the size of the heap
 	int getSize();
-	
-	// Percolate an element down to the bottom of the tree, switching with the smallest child
+
+	// Deletes the minimum element from the heap and returns it
+	int deleteMin();
+
+	// Percolate an element down to the bottom of the tree, switching with the smallest child until it's in the correct position
 	void percolateDown(int index);
 
 	// Percolate an element up the tree until it is in the proper location, switching only with elements that are larger than it
@@ -31,9 +34,6 @@ public:
 
 	// Sorts the array which is passed in by inserting it into the heap and then removing elements and replacing them in the array
 	void sort(int * array, int arraySize);
-
-	// Returns true if the element at the specified index exists
-	bool exists(int index);
 };
 
 #endif

@@ -1,5 +1,7 @@
 #define INITIAL_HEAP_SIZE 10
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <limits.h>
 #include "heap.h"
 
@@ -14,92 +16,128 @@ int getRightChildIndex(int index) { return index * 2 + 1; }
 
 int getParentIndex(int index) { return index / 2; }
 
-
 BinaryHeap::BinaryHeap() {
-	this->heap = new int[INITIAL_HEAP_SIZE]; // The ptr to the array that represents our binary heap
-	this->heapSize = INITIAL_HEAP_SIZE; // The size of the heap
-	this->current = 1; // Our current index
+	heap = new int[INITIAL_HEAP_SIZE]; // Initialize the heap with the given size
+	heapSize = INITIAL_HEAP_SIZE; // The size of the heap
+	current = 1; // Our current index
 
 	// Initialize all our elements to be null
-	for (int i = 0; i < this->heapSize; i++) {
-		this->heap[i] = INT_MIN;
+	for (int i = 0; i < heapSize; i++) {
+		heap[i] = INT_MIN;
 	}
 }
 
 // Insert an element into the heap, and resize the heap array if necessary
 bool BinaryHeap::insert(int element) {
-	// Resize the heap if we are at 
-	if (this->current + 1 == this->heapSize) {
-		if (this->heapSize * 2 > INT_MAX) {
+	// Resize the heap if we need to
+	if (current + 1 == heapSize) {
+		if (heapSize * 2 > INT_MAX) {
 			return false;
+		} else {
+			resize();
 		}
 	}
 
 	// Add the element at the end of the tree
-	this->heap[this->current++] = element;
+	heap[current] = element;
 
 	// Percolate it up the tree until it's at the correct position
-	this->percolateUp(this->current - 1);
+	percolateUp(current);
+
+	current++;
+
+	return true;
 }
 
 // Resizes the heap array to 2 * heapSize
 void BinaryHeap::resize() {
-	int * oldArr = this->heap;
-	int * newArr = new int[this->heapSize * 2];
+	int * oldArr = heap;
+	int * newArr = new int[heapSize * 2];
 
-	for (int i = 0; i < this->heapSize; i++) {
+	for (int i = 0; i < heapSize; i++) {
 		newArr[i] = oldArr[i];
 	}
 
-	this->heapSize *= 2;
-	this->heap = newArr;
+	heapSize *= 2;
+	heap = newArr;
 }
 
 // Retrieves the current size of our heap array
 int BinaryHeap::getHeapSize() {
-	return this->heapSize;
+	return heapSize;
 }
 
 // Retrieves the ptr to the heap
 int * BinaryHeap::getHeap() {
-	return this->heap;
+	return heap;
 }
 
 // Returns the size of the heap
 int BinaryHeap::getSize() {
-	return this->current - 1;
+	return current - 1;
 }
 
-// Percolate an element down to the bottom of the tree, switching with the smallest child
+// Deletes the minimum element from the heap and returns it
+int BinaryHeap::deleteMin() {
+	if (getSize() == 0) {
+		return INT_MIN;
+	}
+
+	int min = heap[1];
+	heap[1] = heap[current--];
+	heap[current] = INT_MIN;
+	percolateDown(1);
+	return min;
+}
+
+// Percolate an element down to the bottom of the tree, switching with the smallest child it is greater than
 void BinaryHeap::percolateDown(int index) {
+	int parent = heap[index];
+
+	int leftChildIndex = getLeftChildIndex(index);
+	int rightChildIndex = getRightChildIndex(index);
+
+	// Set left/right children to INT_MIN if their index is out of bounds
+	int leftChild = leftChildIndex < current ? heap[leftChildIndex] : INT_MIN;
+	int rightChild = rightChildIndex < current ? heap[rightChildIndex] : INT_MIN;
+	
+	if (parent > leftChild && leftChild < rightChild && leftChild != INT_MIN) {
+		heap[leftChildIndex] = parent;
+		heap[index] = leftChild;
+		percolateDown(leftChildIndex);
+		return;
+	}
+
+	if (parent > rightChild && rightChild <= leftChild && rightChild != INT_MIN) {
+		heap[rightChildIndex] = parent;
+		heap[index] = rightChild;
+		percolateDown(rightChildIndex);
+		return;
+	}
 
 }
 
 // Percolate an element up the tree until it is in the proper location, switching only with elements that are larger than it
 void BinaryHeap::percolateUp(int index) {
 	int parentIndex = getParentIndex(index);
+
 	// We have percolated all the way to the top of the tree
 	if (parentIndex <= 0) {
 		return;
 	}
 
-	int parent = this->heap[parentIndex];
-	int current = this->heap[index];
+	int parent = heap[parentIndex];
+	int current = heap[index];
 	// Swap elements if the parent is greater than the current element 
-	if (exists(index) && parent > current) {
-		this->heap[parentIndex] = current;
-		this->heap[index] = parent;
+	if (parent > current) {
+		heap[parentIndex] = current;
+		heap[index] = parent;
 
-		this->percolateUp(parentIndex);
+		percolateUp(parentIndex);
 	}
 }
 
 // Sorts the array which is passed in by inserting it into the heap and then removing elements and replacing them in the array
 void BinaryHeap::sort(int * array, int arraySize) {
 	
-}
-
-// Returns true if the element at the specified index exists
-bool BinaryHeap::exists(int index) {
-	return (index > 0 && index < this->heapSize && this->heap[index] != INT_MIN);
 }

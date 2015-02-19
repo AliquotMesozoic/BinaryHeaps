@@ -11,18 +11,11 @@ int main(int argc, char const *argv[])
 	heap.insert(5);
 	heap.insert(2);
 	heap.insert(1);
-	heap.insert(8);
+	heap.insert(9);
 
-	int * hArr = heap.getHeap();
+	for (int i = 0; i < heap.getSize() + 1; i++) {
+		printf("%d, ", heap.getHeap()[i]);
+	}
 
-	printf("[");
-	for (int i = 0; i < heap.getHeapSize(); i++) {
-		if (i != heap.getHeapSize() - 1) {
-			printf("%d, ", hArr[i]);
-		} else {
-			printf("%d]\n", hArr[i]);
-		}
-	}	
-
-	return 0;
+	// return 0;
 }
