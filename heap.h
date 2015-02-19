@@ -9,7 +9,7 @@ public:
 	BinaryHeap();
 
 	// Insert an element into the heap, and resize the heap array if necessary
-	void insert(int element);
+	bool insert(int element);
 
 	// Resizes the heap array to 2 * heapSize
 	void resize();
@@ -20,12 +20,9 @@ public:
 	// Retrieves the ptr to the heap
 	int * getHeap();
 
-	// Retrieves the element at the specified index
-	int getElement(int index);
-
-	// Set the element at the specified index to the given value: primarily for internal use
-	void setElement(int index, int value);
-
+	// Returns the size of the heap
+	int getSize();
+	
 	// Percolate an element down to the bottom of the tree, switching with the smallest child
 	void percolateDown(int index);
 
@@ -33,7 +30,10 @@ public:
 	void percolateUp(int index);
 
 	// Sorts the array which is passed in by inserting it into the heap and then removing elements and replacing them in the array
-	void sort(int * array);
+	void sort(int * array, int arraySize);
+
+	// Returns true if the element at the specified index exists
+	bool exists(int index);
 };
 
 #endif

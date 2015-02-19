@@ -7,18 +7,22 @@ int main(int argc, char const *argv[])
 {
 	BinaryHeap heap;
 
-	int arr[5] = {5, 2, 4, 1, 3};
+	heap.insert(3);
+	heap.insert(5);
+	heap.insert(2);
+	heap.insert(1);
+	heap.insert(8);
 
-	heap.sort(arr);
+	int * hArr = heap.getHeap();
 
 	printf("[");
-	for (int i = 0; i < 5; i++) {
-		if (i == 4) {
-			printf("%d]\n", arr[i]);
+	for (int i = 0; i < heap.getHeapSize(); i++) {
+		if (i != heap.getHeapSize() - 1) {
+			printf("%d, ", hArr[i]);
 		} else {
-			printf("%d, ", arr[i]);
+			printf("%d]\n", hArr[i]);
 		}
-	}
+	}	
 
 	return 0;
 }
