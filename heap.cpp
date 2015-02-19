@@ -1,12 +1,10 @@
 #define INITIAL_HEAP_SIZE 10
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <limits.h>
 #include "heap.h"
 
 /*
-A BinaryHeap which can take any element except for MIN_INTEGER
+A BinaryHeap which can take any element except for INT_MIN
 */
 
 // Helper methods to get the indexes of parents and children
@@ -84,7 +82,9 @@ int BinaryHeap::deleteMin() {
 	}
 
 	int min = heap[1];
-	heap[1] = heap[current--];
+	heap[1] = heap[--current];
+
+	// Set the last element to null, because we've moved it to the root of the "tree"
 	heap[current] = INT_MIN;
 	percolateDown(1);
 	return min;
@@ -101,6 +101,7 @@ void BinaryHeap::percolateDown(int index) {
 	int leftChild = leftChildIndex < current ? heap[leftChildIndex] : INT_MIN;
 	int rightChild = rightChildIndex < current ? heap[rightChildIndex] : INT_MIN;
 	
+	// If the parent is bigger, swap it down
 	if (parent > leftChild && leftChild < rightChild && leftChild != INT_MIN) {
 		heap[leftChildIndex] = parent;
 		heap[index] = leftChild;
